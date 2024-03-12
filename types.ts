@@ -1,7 +1,11 @@
 type Task = {
     title: string;
-    description: string;
-    status: Status
+    description: string | null | undefined;
+    status: Status | null
 }
 
-type Status = 'To do' | 'In progress' | 'Done'
+type Status = {
+    id: number,
+    name: string,
+    color: string
+}

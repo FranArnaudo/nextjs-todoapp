@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgres://asvtauiu:RtCetyRPXSPBW29zaradMQR3zLYHwh7E@kesavan.db.elephantsql.com/asvtauiu?schema=public"
+}
+
+model Status {
+  id    Int     @id(map: "status_pkey") @default(autoincrement())
+  name  String  @db.VarChar
+  color String  @db.VarChar
+  Tasks Tasks[]
+}
+
+model Tasks {
+  id          Int      @id(map: "tasks_pkey") @default(autoincrement())
+  title       String   @db.VarChar
+  description String?  @db.VarChar
+  createdat   DateTime @db.Timestamp(6)
+  createdby   Int
+  updatedat   DateTime @db.Timestamp(6)
+  status_id   Int
+  Status      Status  @relation(fields: [status_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tasks_fk_1")
+  Users       Users    @relation(fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tasks_fk")
+}
+
+model Users {
+  id       Int     @id(map: "user_pkey") @default(autoincrement())
+  username String  @db.VarChar
+  password String  @db.VarChar
+  Tasks    Tasks[]
+}
