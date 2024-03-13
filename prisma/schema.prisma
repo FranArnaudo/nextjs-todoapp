@@ -22,8 +22,9 @@ model Tasks {
   createdby   Int
   updatedat   DateTime @db.Timestamp(6)
   status_id   Int
-  Status      Status  @relation(fields: [status_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tasks_fk_1")
+  order       Int
   Users       Users    @relation(fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tasks_fk")
+  Status      Status   @relation(fields: [status_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tasks_fk_1")
 }
 
 model Users {

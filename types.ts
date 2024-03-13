@@ -1,4 +1,5 @@
 type Task = {
+    id: number;
     title: string;
     description: string | null | undefined;
     status: Status | null
