@@ -23,6 +23,9 @@ export const fetchAllTasks = async (query:string, status:string) => {
     where,
     include:{
       Status: true
+    },
+    orderBy:{
+      order: 'asc'
     }
   })
   
