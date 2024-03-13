@@ -5,6 +5,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { ChangeEvent } from "react";
 import _ from 'lodash'
 import Search from "@/components/Search";
+import TaskPostItList from "@/components/TaskPostItList";
 
 const TasksPage = async ({searchParams}:{searchParams:{
     query?:string,
@@ -22,7 +23,7 @@ const TasksPage = async ({searchParams}:{searchParams:{
                 <Search statuses={statuses}/>
                 <ButtonLink text="Add note" href="/tasks/create"/>
             </div>
-            {tasks.map((task)=><TaskPostIt key={task.id} title={task.title} description={task.description} status={task.Status}/>)}
+            <TaskPostItList tasks={tasks}/>
         </div>
      );
 }
