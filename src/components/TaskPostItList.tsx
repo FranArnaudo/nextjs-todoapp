@@ -37,7 +37,6 @@ const TaskPostItList = ({tasks}: TaskPostItListProps) => {
     */
     const listRef = useRef<HTMLDivElement>(null)
     const [orderedTasks, setOrderedTasks] = useState(tasks)
-    console.log("🚀Fran ~ file: TaskPostItList.tsx:40 ~ TaskPostItList ~ orderedTasks:", orderedTasks)
     const [prevAndPostNode, setPrevAndPostNode] = useState<{prevNode:number,postNode:number}>({prevNode:0,postNode:0})
     const [taskBeingDragged, setTaskBeingDragged] = useState<number|null>(null)
     const [isDragging, setIsDragging] = useState<boolean>(false)
@@ -73,12 +72,16 @@ const TaskPostItList = ({tasks}: TaskPostItListProps) => {
                     const afterNew = task.order > newPosition
                     const inNew = task.order === newPosition
                     if(task.id === taskBeingDragged){
+                        console.log("Moving task: ",task.id," to:",newPosition)
                         return {...task, order:newPosition}
-                    }else if((goingForward && inNew) || (afterNew && !afterPrev)){
+                    }else if((!goingForward && inNew) || (afterNew && !afterPrev)){
+                        console.log("Moving task: ",task.id," to:",task.order + 1)
                         return {...task, order: task.order +1}
-                    }else if((!goingForward && inNew) || (!afterNew && afterPrev)){
+                    }else if((goingForward && inNew) || (!afterNew && afterPrev)){
+                        console.log("Moving task: ",task.id," to:",task.order - 1)
                         return {...task, order: task.order -1}
                     }else{
+                        console.log("Not Moving task: ",task.id, "place is: ",task.order)
                         return task
                     }
                 }).sort((a,b)=> (a.order > b.order ? 1 : -1))
@@ -103,15 +106,17 @@ const TaskPostItList = ({tasks}: TaskPostItListProps) => {
             },[orderedTasks,])
             useEffect(()=>{
                 if(isDragging){
-                    console.log('ehere')
                     document.addEventListener('mousemove',handleMouseMove)
                 }else{
+                    console.log('Task being dragged: ', taskBeingDragged, "between: ", prevAndPostNode.prevNode, "and ", prevAndPostNode.postNode)
                     document.removeEventListener('mousemove',handleMouseMove)
                 }
             },[isDragging])
             return ( 
-                <div ref={listRef} className='flex gap-2 flex-wrap' onDragEnter={()=>console.log('dragenter')}>
-                {orderedTasks.map((task)=><><TaskPostIt setTaskBeingDragged={handleDragging} key={task.id} id={task.id} title={task.title} description={task.description} status={task.Status}/></>)}
+                <div ref={listRef} className='flex gap-2 flex-wrap'>
+                {orderedTasks.map((task)=><div className="flex" key={task.id}>
+                    {prevAndPostNode.postNode === task.id && isDragging && <div style={{height:1, width:'16px'}}></div>}
+                <TaskPostIt setTaskBeingDragged={handleDragging} key={task.id} id={task.id} title={task.title} description={task.description} status={task.Status}/>{prevAndPostNode.prevNode === task.id && isDragging && <div style={{height:1, width:'16px'}}></div>}</div>)}
                 </div>
                 );
             }
